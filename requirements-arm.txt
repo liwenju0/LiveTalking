@@ -1,0 +1,48 @@
+# ARM优化版本 - 移除或替换有问题的包
+
+torch-ema
+ninja
+trimesh
+opencv-python-headless  # 使用 headless 版本，更轻量
+tensorboardX
+# numpy scipy scikit-learn  # 通过 conda 安装，已注释
+pandas
+tqdm
+matplotlib
+
+# PyMCubes  # 项目中未使用，已删除以避免ARM编译问题
+rich
+# dearpygui  # GUI库，服务器环境不需要
+packaging
+
+face_alignment  # 可能需要很长编译时间，耐心等待
+python_speech_features
+numba  # ARM支持一般，可能有性能问题
+resampy
+pyaudio  # 已注释
+soundfile==0.12.1
+einops
+configargparse
+
+lpips==0.1.3
+imageio-ffmpeg
+
+transformers==4.46.2
+edge_tts
+flask
+flask_sockets
+opencv-python-headless
+aiortc  # 可能需要较长编译时间
+aiohttp_cors
+
+ffmpeg-python
+omegaconf
+diffusers
+accelerate
+
+librosa
+openai
+websockets==12.0
+gradio_client
+# azure-cognitiveservices-speech  # 如果不用Azure可以注释掉
+

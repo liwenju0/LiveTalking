@@ -4,7 +4,7 @@
 
 set -e
 
-IMAGE_NAME="lightmoutain-digital:latest"
+IMAGE_NAME="lightmountain-digital:v1.0.0"
 CONTAINER_NAME="livetalking-dev"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
@@ -36,7 +36,6 @@ echo ""
 
 sudo docker run -it --rm \
   --name ${CONTAINER_NAME} \
-  --gpus all \
   --net host \
   -v ${PROJECT_DIR}:/nerfstream \
   ${IMAGE_NAME} \

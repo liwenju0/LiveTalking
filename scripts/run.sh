@@ -1,14 +1,14 @@
 #!/bin/bash
 # Docker 容器启动脚本（前台运行，方便开发调试）
-# 用途：启动 LiveTalking 容器，挂载本地代码目录
+# 用途：启动 lightmoutain 容器，挂载本地代码目录
 
 set -e
 
-IMAGE_NAME="lightmoutain-digital:latest"
-CONTAINER_NAME="livetalking"
+IMAGE_NAME="lightmountain-digital:v1.0.0"
+CONTAINER_NAME="lightmoutain"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
-echo "启动 LiveTalking 容器..."
+echo "启动 lightmoutain 容器..."
 echo "项目目录: ${PROJECT_DIR}"
 echo ""
 
@@ -33,7 +33,7 @@ sudo docker run -d \
   --restart unless-stopped \
   -v ${PROJECT_DIR}:/nerfstream \
   ${IMAGE_NAME} \
-  /bin/bash -c "apt-get update -qq && apt-get install -y -qq libgl1-mesa-glx libglib2.0-0 > /dev/null 2>&1 && source /root/miniconda3/etc/profile.d/conda.sh && conda activate nerfstream && python app.py --transport webrtc --model wav2lip --avatar_id mil_person"
+  /bin/bash -c "source /root/miniconda3/etc/profile.d/conda.sh && conda activate nerfstream && python app.py --transport webrtc --model wav2lip --avatar_id mil_person"
 
 echo ""
 echo "✅ 容器已启动"
