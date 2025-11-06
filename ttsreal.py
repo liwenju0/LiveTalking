@@ -37,7 +37,7 @@ import queue
 from queue import Queue
 from io import BytesIO
 import copy,websockets,gzip
-import azure.cognitiveservices.speech as speechsdk
+# import azure.cognitiveservices.speech as speechsdk
 
 from threading import Thread, Event
 from enum import Enum

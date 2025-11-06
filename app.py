@@ -347,7 +347,7 @@ if __name__ == '__main__':
     parser.add_argument('--push_url', type=str, default='http://localhost:1985/rtc/v1/whip/?app=live&stream=livestream') #rtmp://localhost/live/livestream
 
     parser.add_argument('--max_session', type=int, default=1)  #multi session count
-    parser.add_argument('--listenport', type=int, default=8010, help="web listen port")
+    parser.add_argument('--listenport', type=int, default=80, help="web listen port")
 
     opt = parser.parse_args()
     #app.config.from_object(opt)
