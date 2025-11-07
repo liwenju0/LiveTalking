@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字人交互平台 v7</title>
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/bootstrap-icons/font/bootstrap-icons.css?v=2">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --background-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-container .row {
+            flex: 1;
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .dashboard-container .video-col {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 视频卡片等高 */
+        .video-col .card {
+            flex: 1 !important;
+            height: 100% !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-container .card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card-body {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: none;
+            margin-bottom: 0;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-bottom: none;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        video {
+            width: auto;
+            height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: var(--border-radius);
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 视频卡片无内边距 */
+        .video-col .card-body.p-0 {
+            padding: 0 !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .form-control {
+            border-radius: var(--border-radius);
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="row">
+            <!-- 视频区域 -->
+            <div class="video-col">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="video-container">
+                            <video id="video" autoplay playsinline muted></video>
+                        </div>
+                        
+                        <!-- STUN 服务器默认启用 -->
+                        <input type="hidden" id="use-stun" checked>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏的会话ID -->
+    <input type="hidden" id="sessionid" value="0">
+
+
+    <script src="client.js?v=8"></script>
+    <script src="srs.sdk.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/jquery/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 页面加载后立即调用 start()
+            // 浏览器可能会阻止自动播放，但连接会建立
+            setTimeout(function() {
+                if (typeof start === 'function') {
+                    start();
+                    console.log('自动连接已启动');
+                }
+            }, 500);
+            
+            // 监听任何用户交互，确保视频有声音
+            var hasInteracted = false;
+            function handleFirstInteraction() {
+                if (!hasInteracted) {
+                    hasInteracted = true;
+                    var video = document.getElementById('video');
+                    if (video) {
+                        // 解除静音以获得声音
+                        if (video.muted) {
+                            video.muted = false;
+                            console.log('用户交互：视频已解除静音');
+                        }
+                        // 如果视频暂停了，播放它
+                        if (video.paused) {
+                            video.play().catch(e => console.log('视频播放尝试'));
+                        }
+                    }
+                }
+            }
+            
+            // 在多个事件上监听第一次用户交互
+            $(document).one('click keydown touchstart', handleFirstInteraction);
+        });
+    </script>
+</body>
+</html>
